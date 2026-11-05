@@ -265,7 +265,7 @@
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 18px;
     }
 
@@ -280,12 +280,19 @@
       padding: 25px;
       box-shadow: var(--shadow-card);
       overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
       transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
     .app-card:hover {
       transform: translateY(-2px);
       border-color: color-mix(in srgb, var(--brand) 35%, var(--line));
       box-shadow: var(--shadow);
+    }
+    .app-card:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--brand) 72%, white);
+      outline-offset: 3px;
     }
     .app-card:after {
       content: "";
@@ -595,6 +602,15 @@
         status: "Available",
         tags: ["Final exam", "SBA revision", "Study resource"],
         icon: "target"
+      },
+      {
+        name: "Final Viva Revision",
+        category: "revision",
+        description: "Structured viva practice and reference material for the final anaesthesiology examination.",
+        url: "./finalviva/",
+        status: "Available",
+        tags: ["Final exam", "Viva practice", "Oral revision"],
+        icon: "viva"
       }
 
       // Example future app:
@@ -622,6 +638,11 @@
           <circle cx="12" cy="12" r="1.2" fill="currentColor"/>
           <path d="M15.4 8.6 21 3m0 0v4m0-4h-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`,
+      viva: `
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 5.5h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-7l-4.5 3v-3H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M7.5 10h9M7.5 13h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>`,
       tool: `
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="m14.8 6.2 3-3a5 5 0 0 1-6.1 6.1L5.2 15.8a2.1 2.1 0 0 0 3 3l6.5-6.5a5 5 0 0 1 6.1-6.1l-3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -637,7 +658,7 @@
       }
 
       el.innerHTML = apps.map(app => `
-        <article class="app-card">
+        <a class="app-card" href="${escapeAttr(app.url)}" aria-label="Open ${escapeAttr(app.name)}">
           <div class="card-top">
             <div class="app-icon">${ICONS[app.icon] || ICONS.tool}</div>
             <span class="badge">${escapeHtml(app.status)}</span>
@@ -647,10 +668,10 @@
           <div class="chips">
             ${app.tags.map(tag => `<span class="chip">${escapeHtml(tag)}</span>`).join("")}
           </div>
-          <a class="card-action" href="${escapeAttr(app.url)}" aria-label="Open ${escapeAttr(app.name)}">
+          <span class="card-action">
             Open resource <span aria-hidden="true">→</span>
-          </a>
-        </article>
+          </span>
+        </a>
       `).join("");
     }
 
